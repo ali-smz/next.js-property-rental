@@ -1,17 +1,6 @@
 // import properties from "@/properties.json";
 import PropertyCard from "@/components/propertyCard";
-
-const fetchProperties = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/properties");
-    if (!res.ok) {
-      throw new Error("Faild to fetch");
-    }
-    return res.json();
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { fetchProperties } from "@/utils/request";
 
 const PropertiesPage = async () => {
   const properties = await fetchProperties();
