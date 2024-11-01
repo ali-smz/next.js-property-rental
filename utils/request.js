@@ -1,3 +1,4 @@
+// fetch properties
 const fetchProperties = async () => {
   const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
   try {
@@ -15,4 +16,21 @@ const fetchProperties = async () => {
   }
 };
 
-export { fetchProperties };
+// fetch property
+const fetchProperty = async (id) => {
+  const apiDomain = process.env.NEXT_PUBLIC_API_DOMAIN || null;
+  try {
+    if (!apiDomain) {
+      return null;
+    }
+    const res = await fetch(`${apiDomain}/properties/${id}`);
+    if (!res.ok) {
+      throw new Error("Faild to fetch");
+    }
+    return res.json();
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+export { fetchProperties, fetchProperty };
