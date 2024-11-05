@@ -29,9 +29,51 @@ const PropertyAddForm = () => {
     images: [],
   });
 
-  const handleChange = () => {};
-  const handleAmenitiesChange = () => {};
-  const handleImageChange = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.includes(".")) {
+      const [outerkey, innerkey] = name.split(".");
+      setFields((prev) => ({
+        ...prev,
+        [outerkey]: {
+          ...prev[outerkey],
+          [innerkey]: value,
+        },
+      }));
+    } else {
+      setFields((prev) => ({
+        ...prev,
+        [name]: [value],
+      }));
+    }
+  };
+  const handleAmenitiesChange = (e) => {
+    const { value, checked } = e.target;
+
+    const updatedAmenities = [...fields.amenities];
+
+    if (checked) {
+      updatedAmenities.push(value);
+    } else {
+      const index = updatedAmenities.indexOf(value);
+
+      if (index !== -1) {
+        updatedAmenities.splice(index, 1);
+      }
+    }
+    setFields((prev) => ({ ...prev, amenities: updatedAmenities }));
+  };
+  const handleImageChange = (e) => {
+    const { files } = e.target;
+
+    const updatedImages = [...fields.images];
+
+    for (const file of files) {
+      updatedImages.push(file);
+    }
+    setFields((prev) => ({ ...prev, images: updatedImages }));
+  };
 
   return (
     <form>
