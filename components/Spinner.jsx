@@ -8,14 +8,16 @@ const override = {
 
 const Spinner = ({ loading }) => {
   return (
-    <ClipLoader
-      color="#3b82f6"
-      loading={loading}
-      cssOverride={override}
-      size={150}
-      aria-label="Loading Spinner"
-      data-testid="loader"
-    />
+    <div className="flex min-h-screen w-full justify-center items-center">
+      <ClipLoader
+        color="#3b82f6"
+        loading={loading}
+        cssOverride={override}
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+    </div>
   );
 };
 
