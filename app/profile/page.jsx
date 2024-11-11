@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import profileDefault from "@/assets/images/profile.png";
-import a1 from "@/public/images/properties/a1.jpg";
-import b1 from "@/public/images/properties/b1.jpg";
 import Link from "next/link";
 import Spinner from "@/components/Spinner";
 
@@ -18,14 +16,14 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProperties = async () => {
-      // if (!userId) {
-      //   return;
-      // }
+    const fetchProperties = async (userId) => {
+      if (!userId) {
+        return;
+      }
 
       try {
         const res = await fetch(
-          `http://localhost:3000/api/properties/user/6728b10be39b657d257c51ea`
+          `http://localhost:3000/api/properties/user/${userId}`
         );
         if (res.status === 200) {
           const data = await res.json();
@@ -40,82 +38,89 @@ const ProfilePage = () => {
 
     fetchProperties();
 
-    // if (session?.user?.id) {
-    //   fetchProperties(session.user.id);
-    // }
+    if (session?.user?.id) {
+      fetchProperties(session.user.id);
+    }
   }, []);
 
   const propertyDeleteHandler = (id) => {};
 
-  
   return (
-    <section className="bg-blue-50">
-      <div className="container m-auto py-24">
-        <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-          <h1 className="text-3xl font-bold mb-4">Your Profile</h1>
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/4 mx-20 mt-10">
-              <div className="mb-4">
-                <Image
-                  className="h-32 w-32 md:h-48 md:w-48 rounded-full mx-auto md:mx-0"
-                  src={profileImage || profileDefault}
-                  height={200}
-                  width={200}
-                  alt="User"
-                />
-              </div>
-              <h2 className="text-2xl mb-4">
-                <span className="font-bold block">Name: </span> {profileName}
-              </h2>
-              <h2 className="text-2xl">
-                <span className="font-bold block">Email: </span> {profileEmail}
-              </h2>
-            </div>
-
-            <div className="md:w-3/4 md:pl-4">
-              <h2 className="text-xl font-semibold mb-4">Your Listings</h2>
-              {properties.map((property) => (
-                <div key={property._id} className="mb-10">
-                  <Link href={`/properties/${property._id}`}>
+    <>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <section className="bg-blue-50">
+          <div className="container m-auto py-24">
+            <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
+              <h1 className="text-3xl font-bold mb-4">Your Profile</h1>
+              <div className="flex flex-col md:flex-row">
+                <div className="md:w-1/4 mx-20 mt-10">
+                  <div className="mb-4">
                     <Image
-                      className="h-32 w-full rounded-md object-cover"
-                      src={property.images[0]}
-                      alt="Property 1"
-                      width={200}
+                      className="h-32 w-32 md:h-48 md:w-48 rounded-full mx-auto md:mx-0"
+                      src={profileImage || profileDefault}
                       height={200}
+                      width={200}
+                      alt="User"
                     />
-                  </Link>
-                  <div className="mt-2">
-                    <p className="text-lg font-semibold">{property.name}</p>
-                    <p className="text-gray-600">
-                      Address: {property.location.city}{" "}
-                      {property.location.street} {property.location.state}
-                    </p>
                   </div>
-                  <div className="mt-2">
-                    <Link
-                      href={`/properties/${property._id}/edit`}
-                      className="bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
-                      type="button"
-                      onClick={() => {
-                        propertyDeleteHandler(property._id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  <h2 className="text-2xl mb-4">
+                    <span className="font-bold block">Name: </span>{" "}
+                    {profileName}
+                  </h2>
+                  <h2 className="text-2xl">
+                    <span className="font-bold block">Email: </span>{" "}
+                    {profileEmail}
+                  </h2>
                 </div>
-              ))}
+
+                <div className="md:w-3/4 md:pl-4">
+                  <h2 className="text-xl font-semibold mb-4">Your Listings</h2>
+                  {properties.map((property) => (
+                    <div key={property._id} className="mb-10">
+                      <Link href={`/properties/${property._id}`}>
+                        <Image
+                          className="h-32 w-full rounded-md object-cover"
+                          src={property.images[0]}
+                          alt="Property 1"
+                          width={200}
+                          height={200}
+                        />
+                      </Link>
+                      <div className="mt-2">
+                        <p className="text-lg font-semibold">{property.name}</p>
+                        <p className="text-gray-600">
+                          Address: {property.location.city}{" "}
+                          {property.location.street} {property.location.state}
+                        </p>
+                      </div>
+                      <div className="mt-2">
+                        <Link
+                          href={`/properties/${property._id}/edit`}
+                          className="bg-blue-500 text-white px-3 py-3 rounded-md mr-2 hover:bg-blue-600"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
+                          type="button"
+                          onClick={() => {
+                            propertyDeleteHandler(property._id);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      )}
+    </>
   );
 };
 
