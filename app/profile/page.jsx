@@ -43,7 +43,25 @@ const ProfilePage = () => {
     }
   }, []);
 
-  const propertyDeleteHandler = (id) => {};
+  const propertyDeleteHandler = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this prperty ?"
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/properties/${id}`, { method: DELETE });
+
+      if (res.status === 200) {
+        const updatedProperties = properties.filter(
+          (property) => property._id !== id
+        );
+        setProperties(updatedProperties);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
