@@ -95,7 +95,28 @@ const PropertyEditForm = () => {
     setFields((prev) => ({ ...prev, amenities: updatedAmenities }));
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formData = new FormData(e.target);
+      const res = await fetch(`/api/properties/${id}`, {
+        method: "POST",
+        body: formData,
+      });
+      if (res.status === 200) {
+        router.push(`/properties/${id}`);
+        toast.success("Property Successfully Updated .");
+      } else if (res.status === 404 || res.status === 401) {
+        toast.error("Permision Denied .");
+      } else {
+        toast.error("Something Went Wrong .");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong .");
+    }
+  };
 
   return (
     <>
@@ -511,7 +532,7 @@ const PropertyEditForm = () => {
             <input
               type="text"
               id="seller_name"
-              name="seller_info.name."
+              name="seller_info.name"
               className="border rounded w-full py-2 px-3"
               placeholder="Name"
               value={fields.seller_info.name}
