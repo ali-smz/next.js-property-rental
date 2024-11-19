@@ -2,9 +2,6 @@ import { getSessionUser } from "@/utils/getSessionUser";
 import connectDB from "@/config/database";
 import User from "@/models/User";
 
-
-export const dynamic = "force-dynamic";
-
 export const POST = async (request) => {
   await connectDB();
   try {
@@ -17,19 +14,8 @@ export const POST = async (request) => {
 
     const user = await User.findOne({ _id: userId });
     let isBookmarked = user.bookmarks.includes(propertyId);
-    let message;
 
-    if (!isBookmarked) {
-      user.bookmarks.push(propertyId);
-      message = "Bookmark Saved Successfully";
-      isBookmarked = true;
-    } else {
-      user.bookmarks.pull(propertyId);
-      message = "Bookmark Removed Successfully";
-      isBookmarked = false;
-    }
-    await user.save();
-    return new Response(JSON.stringify({ message, isBookmarked }), {
+    return new Response(JSON.stringify({ isBookmarked }), {
       status: 200,
     });
   } catch (error) {
