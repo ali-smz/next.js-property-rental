@@ -7,7 +7,7 @@ const PropertySearchForm = () => {
   const [propertyType, setPropertyType] = useState("All");
   const router = useRouter();
 
-  const submitHandler = (e) => {
+  const submitHandler = (e) => {8
     e.preventDefault();
     if ((location === "", propertyType === "All")) {
       router.push("/properties");
