@@ -18,3 +18,4 @@ export { default as PropertySearchForm } from "./PropertySearchForm";
 export { default as Spinner } from "./Spinner";
 export { default as Messages } from "./Messages";
 export { default as Message } from "./Message";
+export { default as UnreadMessagesCount } from "./UnreadMessagesCount";
