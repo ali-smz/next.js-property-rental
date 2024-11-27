@@ -1,6 +1,56 @@
+"use client";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 const Message = ({ message }) => {
+  const [isRead, setIsRead] = useState(message.read);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const toggleMarkAsRead = async () => {
+    try {
+      const res = await fetch(`/api/messages/${message._id}`, {
+        method: "PUT",
+      });
+      if (res.status === 200) {
+        const { read } = await res.json();
+        setIsRead(read);
+        if (isRead) {
+          toast.info("Marked As New");
+        } else {
+          toast.info("Marked As Read");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong !");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`/api/messages/${message._id}`, {
+        method: "DELETE",
+      });
+
+      if (res.status === 200) {
+        setIsDeleted(true);
+        toast.success("Message Deleted Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Somethong Went Wrong");
+    }
+  };
+
+  if (isDeleted) return null;
+
   return (
     <div className="relative bg-white p-4 rounded-md shadow-md border border-gray-200">
+      {!isRead && (
+        <div className="px-2 py-1 bg-yellow-500 absolute top-2 right-2 rounded-md text-white">
+          NEW
+        </div>
+      )}
       <h2 className="text-xl mb-4">
         <span className="font-bold">Property Inquiry : </span>
         {message.property.name}
@@ -29,10 +79,18 @@ const Message = ({ message }) => {
           {new Date(message.createdAt).toLocaleString()}
         </li>
       </ul>
-      <button className="mt-4 mr-3 bg-blue-500 text-white py-1 px-3 rounded-md">
-        Mark As Read
+      <button
+        onClick={toggleMarkAsRead}
+        className={`mt-4 mr-3 ${
+          isRead ? "bg-gray-300" : "bg-blue-500 text-white"
+        } py-1 px-3 rounded-md`}
+      >
+        {isRead ? "Mark As New" : "Mark As Read"}
       </button>
-      <button className="mt-4 bg-red-500 text-white py-1 px-3 rounded-md">
+      <button
+        onClick={handleDelete}
+        className="mt-4 bg-red-500 text-white py-1 px-3 rounded-md"
+      >
         Delete
       </button>
     </div>
