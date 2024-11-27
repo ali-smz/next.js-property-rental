@@ -17,3 +17,4 @@ export { default as ShareButtons } from "./ShareButtons";
 export { default as PropertySearchForm } from "./PropertySearchForm";
 export { default as Spinner } from "./Spinner";
 export { default as Messages } from "./Messages";
+export { default as Message } from "./Message";
