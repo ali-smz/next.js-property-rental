@@ -4,6 +4,31 @@ import connectDB from "@/config/database";
 
 export const dynamic = "force-dynamic";
 
+export const GET = async (request) => {
+  try {
+    await connectDB();
+    const usersession = await getSessionUser();
+
+    if (!usersession || !usersession.userId) {
+      return new Response(JSON.stringify("login required"), {
+        status: 401,
+      });
+    }
+    const { userId } = usersession;
+    const messages = await Message.find({ userId })
+      .populate("sender", "name")
+      .populate("property", "title");
+    return new Response(JSON.stringify(messages), {
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+    return new Response(JSON.stringify({ message: "Something went wrong" }), {
+      status: 500,
+    });
+  }
+};
+
 export const POST = async (request) => {
   await connectDB();
   try {
@@ -20,14 +45,14 @@ export const POST = async (request) => {
       );
     }
     const { user } = usersession;
-    if (user._id === recipient) {
+    if (user.id === recipient) {
       return new Response(
         JSON.stringify({ message: "You can't send message to yourself" }),
         { status: 400 }
       );
     }
     const newMessage = new Message({
-      sender: user._id,
+      sender: user.id,
       recipient,
       property,
       name,
