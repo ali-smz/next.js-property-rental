@@ -21,7 +21,6 @@ const Properties = () => {
           data.properties.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
-          console.log(data);
           setProperties(data.properties);
           setTotal(data.total);
         }

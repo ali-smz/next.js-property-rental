@@ -1,10 +1,16 @@
-import { Hero, HomeProperties, InfoBoxes } from "@/components";
+import {
+  FeaturedProperties,
+  Hero,
+  HomeProperties,
+  InfoBoxes,
+} from "@/components";
 
 const HomePage = () => {
   return (
     <>
       <Hero />
       <InfoBoxes />
+      <FeaturedProperties />
       <HomeProperties />
     </>
   );
